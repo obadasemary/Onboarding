@@ -13,6 +13,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var selectFloorButton: UIButton!
     @IBOutlet weak var floorsView: UIView!
 
+    @IBOutlet weak var widthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
+
     var selectFloorIsSelected: Bool = true
 
     override func viewDidLoad() {
@@ -20,15 +23,6 @@ class ViewController: UIViewController {
 
         selectFloorButton.roundCorners()
         floorsView.roundCorners()
-        floorsView.isHidden = true
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-
-        super.viewDidAppear(animated)
-
-        floorsView.setAnchorPoint(CGPoint(x: 1.0, y: 1.0))
-        setFloorSelectorInitialScale()
     }
 
     fileprivate func setFloorSelectorInitialScale() {
@@ -40,50 +34,28 @@ class ViewController: UIViewController {
 
     @IBAction func didTapSelectFloor(_ sender: Any) {
 
-        floorsView.isHidden = false
+        widthConstraint.constant = 200
+        heightConstraint.constant = 288
 
         UIView.animate(withDuration: 0.6) {
-
-            self.floorsView.transform = CGAffineTransform.identity
-            self.selectFloorButton.alpha = 0.0
+            self.view.layoutIfNeeded()
         }
     }
 
     @IBAction func didTapFloor(_ sender: UIButton) {
 
-        UIView.animate(withDuration: 0.6, animations: {
-            self.setFloorSelectorInitialScale()
-            self.selectFloorButton.alpha = 1.0
-        }, completion: { (isFinished) in
+        selectFloorButton.setTitle(sender.title(for: .normal), for: .normal)
 
-            if isFinished {
-                self.floorsView.isHidden = true
-            }
-        })
+        widthConstraint.constant = 0
+        heightConstraint.constant = 0
+
+        UIView.animate(withDuration: 0.6) {
+            self.view.layoutIfNeeded()
+        }
     }
 }
 
 extension UIView {
-
-    func setAnchorPoint(_ point: CGPoint) {
-
-        var newPoint = CGPoint(x: bounds.size.width * point.x, y: bounds.size.height * point.y)
-        var oldPoint = CGPoint(x: bounds.size.width * layer.anchorPoint.x, y: bounds.size.height * layer.anchorPoint.y);
-
-        newPoint = newPoint.applying(transform)
-        oldPoint = oldPoint.applying(transform)
-
-        var position = layer.position
-
-        position.x -= oldPoint.x
-        position.x += newPoint.x
-
-        position.y -= oldPoint.y
-        position.y += newPoint.y
-
-        layer.position = position
-        layer.anchorPoint = point
-    }
 
     func roundCorners(cornerRadius: CGFloat = 4) {
 
