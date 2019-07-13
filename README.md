@@ -7,6 +7,11 @@ On boarding animated View
 download or clone the repo.
 </pre>
 
+<b>To Use with width and height constraints</b>
+<pre>
+git checkout "width-height-Constraint"
+</pre>
+
 <h1></h1>
 
 <b>Overview</b>
